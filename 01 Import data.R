@@ -1,8 +1,11 @@
 
-#install.packages(c("httr", "jsonlite"))
+# Load packages
 
 library(httr)
 library(jsonlite)
+library(xlsx)
+
+# Download the ACAPS dataset
 
 ## Post credentials to get an authentication token
 credentials <- list(username="an@acaps.org", password="Beukstraat149")
@@ -34,7 +37,17 @@ while (TRUE) {
   }
   else {
     break
+   }
   }
-}
 
-rm(list=setdiff(ls(), "df"))
+## Save the dataset in excel
+write.xlsx(df,"~/GitHub/covid-data-ODI-submittion/govmes_acaps.xlsx")
+
+# Download the Johns Hopkins COVID-19 cases dataset
+
+## Download datasets of daily cases and deaths
+cases<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",header=TRUE,sep=",",dec=".")
+deaths<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",header=TRUE,sep=",",dec=".")
+
+# Clean the environment
+rm(list=setdiff(ls(), c("df","cases","deaths")))
