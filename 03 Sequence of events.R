@@ -2,6 +2,8 @@
 
 ##Libraries
 library(ggplot2)
+library(xlsx)
+
 
 ##Task 1: Timeline of when the first measure was adopted
 
@@ -53,6 +55,10 @@ library(ggplot2)
   geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
   geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
   ggsave(filename="First measure timeline.png",width=17)
+  
+  ## Save the dataset in excel
+  write.xlsx(datesortedu,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycountry.xlsx")
+  
     
   #Create a table with first measure by type
   firstmeasuretype<-unique(datesortedu$category)
