@@ -3,7 +3,7 @@
     "path": "~/GitHub/covid-data-ODI-submittion/02 Data cleaning and prep.R",
     "project_path": "02 Data cleaning and prep.R",
     "type": "r_source",
-    "hash": "2932109018",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1606047480755.0,
@@ -11,15 +11,15 @@
     "relative_order": 1,
     "properties": {
         "tempName": "Untitled1",
-        "cursorPosition": "14,7",
+        "cursorPosition": "0,13",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1606047181,
+    "lastKnownWriteTime": 1612009682,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1606047181,
+    "last_content_update": 1612009682293,
     "read_only": false,
     "read_only_alternatives": []
 }
