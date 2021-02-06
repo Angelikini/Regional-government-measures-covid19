@@ -1,0 +1,24 @@
+{
+    "id": "5F98BA01",
+    "path": "~/GitHub/covid-data-ODI-submittion/03 First measure analysis.R",
+    "project_path": "03 First measure analysis.R",
+    "type": "r_source",
+    "hash": "3079665419",
+    "contents": "",
+    "dirty": false,
+    "created": 1612208148217.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "cursorPosition": "86,52",
+        "scrollLine": "71"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1612634325,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1612634325634,
+    "read_only": false,
+    "read_only_alternatives": []
+}
