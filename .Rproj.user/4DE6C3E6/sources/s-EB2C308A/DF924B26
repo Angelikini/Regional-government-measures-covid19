@@ -1,0 +1,32 @@
+{
+    "id": "DF924B26",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1612698147302.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "expression": "measures",
+        "caption": "measures",
+        "totalObservations": 23291,
+        "displayedObservations": 23291,
+        "variables": 17,
+        "cacheKey": "CC1E6F99",
+        "object": "measures",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=measures&cache_key=CC1E6F99&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1946532718120,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1612698147302,
+    "read_only": false,
+    "read_only_alternatives": []
+}

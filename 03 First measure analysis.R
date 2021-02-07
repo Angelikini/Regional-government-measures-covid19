@@ -86,8 +86,13 @@ library(tidyverse)
  firstcase<-firstcase[-c(9:14,16,40:49,51:55,59:71,73:91,102:103,119:129,191:194,253:262),,drop=FALSE]#keep only the first case per country and remove the regions - any idea how to automate this?
  
  ###Merge first measure and first case tables
- firsts<- merge(firstmeasure, firstcase, by.x = "iso", by.y= "iso")
- firsts<-firsts
+ firsts<- merge(firstmeasure, firstcase, by.x = "iso", by.y= "iso") #merge datasets
+ firsts<-firsts[,c(2,11,1,10,4,9,12,22,24)] #keep only necessary columns
+ names(firsts)[2]<-"country" #rename column
+ names(firsts)[5]<-"date_measure_implemented" #rename column
+ names(firsts)[6]<-"measure_category" #rename column
+ names(firsts)[8]<-"first_case_date" #rename column
+ names(firsts)[9]<-"first_case_province" #rename column
  
- # Clean the environment
- #rm(list=setdiff(ls(), c("measures","cases","deaths")))
+#Clean the environment
+ #rm(list=setdiff(ls(), c("measures","cases","deaths","firstcase","firstmeasure","firstmeasurecat","firstmeasuretype")))
