@@ -100,6 +100,10 @@ library(tidyverse)
  ggplot(data=fmc, aes(difference)) + 
    geom_histogram()+
    ggsave(filename="Firstcasevsfirstmeasure_histogram.png")
+
+ ###save table
+ write.xlsx(fmc,"~/GitHub/covid-data-ODI-submittion/first_measure_first_case_comparison.xlsx")
+ 
  
 #Clean the environment
  rm(list=setdiff(ls(), c("measures","cases","deaths")))
