@@ -1,29 +1,29 @@
-###Relationship of countries in terms of time the measures were adopted?
+#Relationship of countries in terms of time the measures were adopted?
 
-##Libraries
+#packages
 library(ggplot2)
 library(xlsx)
 library(tidyverse)
 
 ##Task 1: Timeline of when the first measure was adopted
 
-  datesorted<-df[order(df$date_implemented),] #sort gm data based on date and save in a new object
+  datesorted<-measures[order(measures$date_implemented),] #sort gm data based on date and save in a new object
   firstmeasure<- datesorted[match(unique(datesorted$country), datesorted$country),] #I kept only the first measure adoption for each country
   firstmeasure[!is.na(firstmeasure$date_implemented), ]  #I decided to remove the rows with NA in the date_implemented. Alternatively I could have used the date of entry as a proxy.
 
-  #Assign colours to regions
+  ###Assign colours to regions
   region_range <- c("Asia", "Europe", "Americas", "Africa","Middle east","Pacific")
   region_colors <- c("#d11141", "#00b159","#00aedb","#f37735","#ffc425", "#000000")
   firstmeasure$region <- factor(firstmeasure$region, levels=region_range, ordered=TRUE)
   
-  #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  ###Assign positions and direction for the plot so measures occuring at the same date won't clash
   firstmeasure<-firstmeasure %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1))
   firstmeasure$positions <- ave(firstmeasure$direction, cumsum(c(0, diff(firstmeasure$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
   text_offset <- 0.05
   firstmeasure$date_count <- ave(firstmeasure$date_implemented==firstmeasure$date_implemented, firstmeasure$date_implemented, FUN=cumsum)
   firstmeasure$text_position <- (firstmeasure$date_count * text_offset * firstmeasure$direction) + firstmeasure$positions
   
-  #create a new framework with the months
+  ###create a new framework with the months
   month_date_range <- seq(min(firstmeasure$date_implemented), max(firstmeasure$date_implemented), by='month')
   month_format <- format(month_date_range, '%b')
   month_df <- data.frame(month_date_range, month_format)
@@ -32,7 +32,7 @@ library(tidyverse)
   day_format <- format(day_date_range, '%d')
   day_df <- data.frame(day_date_range, day_format)
   
-  #create the plot
+  ###create the plot
   timeline_plot<-ggplot(firstmeasure,aes(x=date_implemented,y=0, col=region, label=country))
   timeline_plot+labs(col="Countries")+
   scale_color_manual(values=region_colors, labels=region_range, drop = FALSE)+
@@ -55,7 +55,7 @@ library(tidyverse)
   geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
   ggsave(filename="First measure timeline.png",width=17)
   
-  # Save the dataset in excel
+  ### Save the dataset in excel
   write.xlsx(firstmeasure,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycountry.xlsx")
   
     
@@ -73,15 +73,21 @@ library(tidyverse)
   
 ##Task 4: Identify distance between first case and first value
 
- #Create first case per country table
- casesod <- cases[,-(1:4),drop=FALSE]#subset the date columns
- firstcasedate<-names(casesod[-1])[apply(casesod[-1] != 0, 1, which.max)]
- firstcase<-as.data.frame(firstcasedate)
- firstcase$country<-cases$Country.Region
- firstcase$province<-cases$Province.State
- names(firstcase)[1]<-"date"
- firstcase$date <- gsub("^.{0,1}", "", firstcase$date)
- firstcase$date<- as.Date(firstcase$date, "%m.%d.%y")
+ ###Create first case per country table
+ casesod <- cases[,-(1:5),drop=FALSE]#subset the date columns
+ firstcasedate<-names(casesod[-1])[apply(casesod[-1] != 0, 1, which.max)]#pivot the table so that I keep the first date a case was reported for each country
+ firstcase<-as.data.frame(firstcasedate)#create the new table
+ firstcase$country<-cases$country#add country names
+ firstcase$iso<-cases$ISO3#add iso3
+ firstcase$province<-cases$Province.State#add region names
+ names(firstcase)[1]<-"fcdate"#rename the date column
+ firstcase$fcdate <- gsub("^.{0,1}", "", firstcase$date)#remove the X before the date
+ firstcase$fcdate<- as.Date(firstcase$date, "%m.%d.%y")#set the date format
+ firstcase<-firstcase[-c(9:14,16,40:49,51:55,59:71,73:91,102:103,119:129,191:194,253:262),,drop=FALSE]#keep only the first case per country and remove the regions - any idea how to automate this?
  
- #Merge first measure and first case tables
- firsts<- merge(firstmeasure, firstcase, by=country)
+ ###Merge first measure and first case tables
+ firsts<- merge(firstmeasure, firstcase, by.x = "iso", by.y= "iso")
+ firsts<-firsts
+ 
+ # Clean the environment
+ #rm(list=setdiff(ls(), c("measures","cases","deaths")))

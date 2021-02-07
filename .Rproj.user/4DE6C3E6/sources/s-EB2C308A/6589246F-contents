@@ -39,12 +39,9 @@ library(xlsx)
     break
    }
   }
-  
-  ##rename to measures
-  measures<-df
 
   ## Save the dataset in excel
-  write.xlsx(measures,"~/GitHub/covid-data-ODI-submittion/govmes_acaps.xlsx")
+  write.xlsx(df,"~/GitHub/covid-data-ODI-submittion/govmes_acaps.xlsx")
 
 #Task2: Download the Johns Hopkins COVID-19 cases dataset
 
@@ -54,4 +51,4 @@ library(xlsx)
   ISO3<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv",header=TRUE,sep=",",dec=".")
   
   # Clean the environment
-  rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3")))
+  rm(list=setdiff(ls(), c("df","cases","deaths")))
