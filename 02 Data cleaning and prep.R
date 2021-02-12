@@ -1,7 +1,9 @@
 #datacleaning
 
-#packages
-library(tidyverse)
+if(!require(tidyverse)){
+  install.packages("tidyverse")
+  library(tidyverse)
+}
 
 ##Task 1: Clean the measures dataset
 

@@ -1,9 +1,19 @@
 #Relationship of countries in terms of time the measures were adopted?
 
-#packages
-library(ggplot2)
-library(xlsx)
-library(tidyverse)
+
+if(!require(ggplot2)){
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+if(!require(xlsx)){
+  install.packages("xlsx")
+  library(xlsx)
+}
+if(!require(tidyverse)){
+  install.packages("tidyverse")
+  library(tidyverse)
+}
+
 
 ##Task 1: Timeline of when the first measure was adopted
 

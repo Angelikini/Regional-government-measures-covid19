@@ -1,9 +1,19 @@
 
 # Load packages
+if(!require(httr)){
+  install.packages("httr")
+  library(httr)
+}
 
-library(httr)
-library(jsonlite)
-library(xlsx)
+if(!require(jsonlite)){
+  install.packages("jsonlite")
+  library(jsonlite)
+}
+
+if(!require(xlsx)){
+  install.packages("xlsx")
+  library(xlsx)
+}
 
 # Task 1: Download the ACAPS dataset
 
@@ -55,3 +65,4 @@ library(xlsx)
   
   # Clean the environment
   rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3")))
+  
