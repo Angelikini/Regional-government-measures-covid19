@@ -22,6 +22,11 @@ if(!require(tidyverse)){
   measures$country<- as.character(measures$country)
   str(measures)
   
+  ###add regions data
+  measures$subregion<-with(countries, subregion[match(measures$iso, ISO3)]) #add subregion column
+  measures$regionalbodies<-with(countries, regionalbodies[match(measures$iso, ISO3)]) #add regionalbodies column
+  measures<-measures[,c(1:9,18:19,10:17)] #reorder columns
+  
 ##Task 2: Clean the cases dataset
   
   ###Keep only the 2020 data

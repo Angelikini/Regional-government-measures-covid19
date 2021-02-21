@@ -62,7 +62,10 @@ if(!require(xlsx)){
   cases<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",header=TRUE,sep=",",dec=".")
   deaths<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",header=TRUE,sep=",",dec=".")
   ISO3<-read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv",header=TRUE,sep=",",dec=".")
+
+#Import regional groups dataset
+  countries<-read.csv("~/GitHub/covid-data-ODI-submittion/Lists.csv",header = TRUE,sep=",")
   
   # Clean the environment
-  rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3")))
+  rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3","countries")))
   

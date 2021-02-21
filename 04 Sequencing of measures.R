@@ -3,3 +3,11 @@
 #Useful resources
 #https://stackoverflow.com/questions/52170556/finding-the-order-and-sequence-of-events-in-r
 #https://medium.com/event-sequence-analysis/case-study-on-event-sequence-analysis-c99a0c52b3d2
+
+#Install packages
+
+if(!require(TraMineR)){
+  install.packages("TraMineR")
+  library(TraMineR)
+}
+

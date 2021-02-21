@@ -1,6 +1,6 @@
 #Relationship of countries in terms of time the measures were adopted?
 
-
+##Load packages
 if(!require(ggplot2)){
   install.packages("ggplot2")
   library(ggplot2)
@@ -13,9 +13,12 @@ if(!require(tidyverse)){
   install.packages("tidyverse")
   library(tidyverse)
 }
+if(!require(lubridate)){
+  install.packages("lubridate")
+  library(lubridate)
+}
 
-
-##Task 1: Timeline of when the first measure was adopted
+##Task 1: Timeline of when the first measure was adopted (global)
 
   datesorted<-measures[order(measures$date_implemented),] #sort gm data based on date and save in a new object
   firstmeasure<- datesorted[match(unique(datesorted$country), datesorted$country),] #I kept only the first measure adoption for each country
@@ -68,20 +71,208 @@ if(!require(tidyverse)){
   ### Save the dataset in excel
   write.xlsx(firstmeasure,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycountry.xlsx")
   
-    
-##Task 2: Create a table with first measure by category
+##Task 2: Regional timelines
+  
+  ###Africa
+  fmafrica<-subset(firstmeasure, region=="Africa") #subset africa
+  africa_range <- c("Western Africa","Northern Africa","Middle Africa","Eastern Africa","Southern Africa") #assign colours to subregion
+  africa_colors <- c("#da6b2f","#c25f2a","#aa5325","#91471f","#793b1a")
+  fmafrica$subregion <- factor(fmafrica$subregion, levels=africa_range, ordered=TRUE)
+  fmafrica<-fmafrica %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmafrica$positions <- ave(fmafrica$direction, cumsum(c(0, diff(fmafrica$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmafrica$date_count <- ave(fmafrica$date_implemented==fmafrica$date_implemented, fmafrica$date_implemented, FUN=cumsum)
+  fmafrica$text_position <- (fmafrica$date_count * text_offset * fmafrica$direction) + fmafrica$positions
+  timeline_plot_africa<-ggplot(fmafrica,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=africa_colors, labels=africa_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmafrica[fmafrica$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure africa timeline.png",width=25)
+  
+  ###Asia
+  fmasia<-subset(firstmeasure, region=="Asia") #subset africa
+  asia_range <- c("Eastern Asia","Southeastern Asia","Southern Asia","Central Asia") #assign colours to subregion
+  asia_colors <- c("#bc0f3a","#a70d34","#920b2d","#7d0a27")
+  fmasia$subregion <- factor(fmasia$subregion, levels=asia_range, ordered=TRUE)
+  fmasia<-fmasia %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmasia$positions <- ave(fmasia$direction, cumsum(c(0, diff(fmasia$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmasia$date_count <- ave(fmasia$date_implemented==fmasia$date_implemented, fmasia$date_implemented, FUN=cumsum)
+  fmasia$text_position <- (fmasia$date_count * text_offset * fmasia$direction) + fmasia$positions
+  timeline_plot_africa<-ggplot(fmasia,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=asia_colors, labels=asia_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmasia[fmasia$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure asia timeline.png",width=25)
+  
+  ###Europe
+  fmeurope<-subset(firstmeasure, region=="Europe") #subset africa
+  europe_range <- c("Eastern Europe","Northern Europe","Southern Europe","Western Europe") #assign colours to subregion
+  europe_colors <- c("#009f50","#008d47","#007b3e","#006a35")
+  fmeurope$subregion <- factor(fmeurope$subregion, levels=europe_range, ordered=TRUE)
+  fmeurope<-fmeurope %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmeurope$positions <- ave(fmeurope$direction, cumsum(c(0, diff(fmeurope$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmeurope$date_count <- ave(fmeurope$date_implemented==fmeurope$date_implemented, fmeurope$date_implemented, FUN=cumsum)
+  fmeurope$text_position <- (fmeurope$date_count * text_offset * fmeurope$direction) + fmeurope$positions
+  timeline_plot_africa<-ggplot(fmeurope,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=europe_colors, labels=europe_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmeurope[fmeurope$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure europe timeline.png",width=25)
+  
+  ###America
+  fmamerica<-subset(firstmeasure, region=="Americas") #subset africa
+  america_range <- c("Central America","North America","South America","Caribbean") #assign colours to subregion
+  america_colors <- c("#009cc5","#008baf","#007999","#006883")
+  fmamerica$subregion <- factor(fmamerica$subregion, levels=america_range, ordered=TRUE)
+  fmamerica<-fmamerica %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmamerica$positions <- ave(fmamerica$direction, cumsum(c(0, diff(fmamerica$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmamerica$date_count <- ave(fmamerica$date_implemented==fmamerica$date_implemented, fmamerica$date_implemented, FUN=cumsum)
+  fmamerica$text_position <- (fmamerica$date_count * text_offset * fmamerica$direction) + fmamerica$positions
+  timeline_plot_africa<-ggplot(fmamerica,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=america_colors, labels=america_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmamerica[fmamerica$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure americas timeline.png",width=25)
+  
+  ###Middle east
+  fmmiddleeast<-subset(firstmeasure, region=="Middle east") #subset africa
+  middle_east_range <- c("Western Asia","Southern Asia","Southeastern Asia") #assign colours to subregion
+  middle_east_colors <- c("#e5b021","#cc9c1d","#b28919")
+  fmmiddleeast$subregion <- factor(fmmiddleeast$subregion, levels=middle_east_range, ordered=TRUE)
+  fmmiddleeast<-fmmiddleeast %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmmiddleeast$positions <- ave(fmmiddleeast$direction, cumsum(c(0, diff(fmmiddleeast$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmmiddleeast$date_count <- ave(fmmiddleeast$date_implemented==fmmiddleeast$date_implemented, fmmiddleeast$date_implemented, FUN=cumsum)
+  fmmiddleeast$text_position <- (fmmiddleeast$date_count * text_offset * fmmiddleeast$direction) + fmmiddleeast$positions
+  timeline_plot_africa<-ggplot(fmmiddleeast,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=middle_east_colors, labels=middle_east_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmmiddleeast[fmmiddleeast$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure middle east timeline.png",width=25)
+  
+  ###Pacific
+  fmpacific<-subset(firstmeasure, region=="Pacific") #subset africa
+  pacific_range <- c("Micronesia","Polynesia","Melanesia","Australia and New Zealand") #assign colours to subregion
+  pacific_colors <- c("#323232","#4c4c4c","#666666","#7f7f7f")
+  fmpacific$subregion <- factor(fmpacific$subregion, levels=pacific_range, ordered=TRUE)
+  fmpacific<-fmpacific %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmpacific$positions <- ave(fmpacific$direction, cumsum(c(0, diff(fmpacific$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmpacific$date_count <- ave(fmpacific$date_implemented==fmpacific$date_implemented, fmpacific$date_implemented, FUN=cumsum)
+  fmpacific$text_position <- (fmpacific$date_count * text_offset * fmpacific$direction) + fmpacific$positions
+  timeline_plot_africa<-ggplot(fmpacific,aes(x=date_implemented,y=0, col=subregion, label=country))
+  timeline_plot_africa+labs(col="Countries")+
+    scale_color_manual(values=pacific_colors, labels=pacific_range, drop = FALSE)+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmpacific[fmpacific$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure pacific timeline.png",width=25)
+  
+  
+##Task 3: Create a table with first measure by category
   firstmeasurecat<-firstmeasure$category
   firstmeasurecat<-as.data.frame(table(firstmeasurecat))
   firstmeasurecat<-firstmeasurecat[order(firstmeasurecat$Freq,decreasing = TRUE),]
   write.xlsx(firstmeasurecat,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycategory.xlsx")
 
-##Task3: Create a table with first measure by type of measure
+##Task 4: Create a table with first measure by type of measure
   firstmeasuretype<-firstmeasure$measure
   firstmeasuretype<-as.data.frame(table(firstmeasuretype))
   firstmeasuretype<-firstmeasuretype[order(firstmeasuretype$Freq,decreasing = TRUE),]
   write.xlsx(firstmeasuretype,"~/GitHub/covid-data-ODI-submittion/firstmeasurebytype.xlsx")
   
-##Task 4: Identify distance between first case and first value
+##Task 4: Identify distance between first case and first measure
 
  ###Create first case per country table
  casesod <- cases[,-(1:5),drop=FALSE]#subset the date columns
