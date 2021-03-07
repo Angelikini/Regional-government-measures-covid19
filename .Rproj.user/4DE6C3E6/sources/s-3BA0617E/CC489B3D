@@ -1,0 +1,25 @@
+{
+    "id": "CC489B3D",
+    "path": "~/GitHub/covid-data-ODI-submittion/04 Sequencing of measures.R",
+    "project_path": "04 Sequencing of measures.R",
+    "type": "r_source",
+    "hash": "808158491",
+    "contents": "",
+    "dirty": false,
+    "created": 1615139582384.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "tempName": "Untitled1",
+        "cursorPosition": "28,0",
+        "scrollLine": "18"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1615145133,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615145133308,
+    "read_only": false,
+    "read_only_alternatives": []
+}

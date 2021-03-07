@@ -1,0 +1,32 @@
+{
+    "id": "DB457AD8",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1615143507172.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "measure",
+        "caption": "measure",
+        "totalObservations": 193,
+        "displayedObservations": 193,
+        "variables": 345,
+        "cacheKey": "17BED3F8",
+        "object": "measure",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=measure&cache_key=17BED3F8&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 2499800731080,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615143507172,
+    "read_only": false,
+    "read_only_alternatives": []
+}
