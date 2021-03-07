@@ -259,20 +259,186 @@ if(!require(lubridate)){
     geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
     ggsave(filename="First measure pacific timeline.png",width=25)
   
+##Task 3: Timeline per regional political body
   
-##Task 3: Create a table with first measure by category
+  ###First_measures for regional bodies
+  firstmeasure_regionalbodies<-separate_rows(firstmeasure,regionalbodies,sep = ", ")
+    
+  ###African Union
+  fmafricanunion<-subset(firstmeasure_regionalbodies, regionalbodies=="African Union") #subset african Union
+  fmafricanunion<-fmafricanunion %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmafricanunion$positions <- ave(fmafricanunion$direction, cumsum(c(0, diff(fmafricanunion$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmafricanunion$date_count <- ave(fmafricanunion$date_implemented==fmafricanunion$date_implemented, fmafricanunion$date_implemented, FUN=cumsum)
+  fmafricanunion$text_position <- (fmafricanunion$date_count * text_offset * fmafricanunion$direction) + fmafricanunion$positions
+  timeline_plot_african_union<-ggplot(fmafricanunion,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_african_union+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmafricanunion[fmafricanunion$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure african union timeline.png",width=25)
+  
+  ###Arab League
+  fmarableague<-subset(firstmeasure_regionalbodies, regionalbodies=="Arab League") #subset arab league
+  fmarableague<-fmarableague %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmarableague$positions <- ave(fmarableague$direction, cumsum(c(0, diff(fmarableague$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmarableague$date_count <- ave(fmarableague$date_implemented==fmarableague$date_implemented, fmarableague$date_implemented, FUN=cumsum)
+  fmarableague$text_position <- (fmarableague$date_count * text_offset * fmarableague$direction) + fmarableague$positions
+  timeline_plot_arab_league<-ggplot(fmarableague,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_arab_league+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmarableague[fmarableague$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure arab league timeline.png",width=25)
+  
+  ###ASEAN
+  fmasean<-subset(firstmeasure_regionalbodies, regionalbodies=="Association of Southeast Asian Nations (ASEAN)") #subset arab league
+  fmasean<-fmasean %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmasean$positions <- ave(fmasean$direction, cumsum(c(0, diff(fmasean$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmasean$date_count <- ave(fmasean$date_implemented==fmasean$date_implemented, fmasean$date_implemented, FUN=cumsum)
+  fmasean$text_position <- (fmasean$date_count * text_offset * fmasean$direction) + fmasean$positions
+  timeline_plot_asean<-ggplot(fmasean,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_asean+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmasean[fmasean$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure asean timeline.png",width=25)
+  
+  ###European Union
+  fmeu<-subset(firstmeasure_regionalbodies, regionalbodies=="European Union") #subset arab league
+  fmeu<-fmeu %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmeu$positions <- ave(fmeu$direction, cumsum(c(0, diff(fmeu$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmeu$date_count <- ave(fmeu$date_implemented==fmeu$date_implemented, fmeu$date_implemented, FUN=cumsum)
+  fmeu$text_position <- (fmeu$date_count * text_offset * fmeu$direction) + fmeu$positions
+  timeline_plot_eu<-ggplot(fmeu,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_eu+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmeu[fmeu$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure EU timeline.png",width=25)
+  
+  ###OAS
+  fmoas<-subset(firstmeasure_regionalbodies, regionalbodies=="Organization of American States (OAS)") #subset arab league
+  fmoas<-fmoas %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmoas$positions <- ave(fmoas$direction, cumsum(c(0, diff(fmoas$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmoas$date_count <- ave(fmoas$date_implemented==fmoas$date_implemented, fmoas$date_implemented, FUN=cumsum)
+  fmoas$text_position <- (fmoas$date_count * text_offset * fmoas$direction) + fmoas$positions
+  timeline_plot_oas<-ggplot(fmoas,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_oas+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmoas[fmoas$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure OAS timeline.png",width=25)
+  
+  ###SAARC
+  fmsaarc<-subset(firstmeasure_regionalbodies, regionalbodies=="South Asian Association for Regional Cooperation (SAARC)") #subset arab league
+  fmsaarc<-fmsaarc %>% mutate(direction = if_else(as.double(str_sub(date_implemented, -1)) %% 2 == 0, -1, 1)) #Assign positions and direction for the plot so measures occuring at the same date won't clash
+  fmsaarc$positions <- ave(fmsaarc$direction, cumsum(c(0, diff(fmsaarc$direction)) != 0), FUN = function(x) x*seq(1, by = 0.5, length.out = length(x)))  
+  fmsaarc$date_count <- ave(fmsaarc$date_implemented==fmsaarc$date_implemented, fmsaarc$date_implemented, FUN=cumsum)
+  fmsaarc$text_position <- (fmsaarc$date_count * text_offset * fmsaarc$direction) + fmsaarc$positions
+  timeline_plot_saarc<-ggplot(fmsaarc,aes(x=date_implemented,y=0, label=country))
+  timeline_plot_saarc+labs(col="Countries")+
+    theme_classic()+
+    geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+    geom_segment(data=fmsaarc[fmsaarc$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+    geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+    theme(axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =element_blank(),
+          axis.ticks.x =element_blank(),
+          axis.line.x =element_blank(),
+          legend.position = "bottom"
+    )+ # Don't show axes, appropriately position legend
+    geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+    geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+    geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
+    ggsave(filename="First measure SAARC timeline.png",width=25)
+  
+##Task 4: Create a table with first measure by category
   firstmeasurecat<-firstmeasure$category
   firstmeasurecat<-as.data.frame(table(firstmeasurecat))
   firstmeasurecat<-firstmeasurecat[order(firstmeasurecat$Freq,decreasing = TRUE),]
   write.xlsx(firstmeasurecat,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycategory.xlsx")
 
-##Task 4: Create a table with first measure by type of measure
+##Task 5: Create a table with first measure by type of measure
   firstmeasuretype<-firstmeasure$measure
   firstmeasuretype<-as.data.frame(table(firstmeasuretype))
   firstmeasuretype<-firstmeasuretype[order(firstmeasuretype$Freq,decreasing = TRUE),]
   write.xlsx(firstmeasuretype,"~/GitHub/covid-data-ODI-submittion/firstmeasurebytype.xlsx")
   
-##Task 4: Identify distance between first case and first measure
+##Task 6: Identify distance between first case and first measure
 
  ###Create first case per country table
  casesod <- cases[,-(1:5),drop=FALSE]#subset the date columns
@@ -304,7 +470,8 @@ if(!require(lubridate)){
 
  ###save table
  write.xlsx(fmc,"~/GitHub/covid-data-ODI-submittion/first_measure_first_case_comparison.xlsx")
- 
+
+
  
 #Clean the environment
  rm(list=setdiff(ls(), c("measures","cases","deaths")))
