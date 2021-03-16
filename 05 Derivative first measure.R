@@ -49,25 +49,61 @@ cs$date <- gsub("X", "0", cs$date)
 cs$date <- gsub("\\.", "/", cs$date)
 cs$date <- mdy(cs$date)
 fm$date <- ymd(fm$date)
-fm$daybefore <- fm$date -1
+fm$one <- fm$date -1
+fm$two <- fm$date -2
+fm$three <- fm$date -3
+fm$four <- fm$date -4
+fm$five <- fm$date -5
+fm$six <- fm$date -6
+fm$seven <- fm$date -7
+
 
 names(cs)[names(cs) == "Country.Region"] <- "country"
-names(fm)[names(fm) == "date_implemented"] <- "date"
+#names(fm)[names(fm) == "date_implemented"] <- "date"
 
 ## merge
 dat <- 
   left_join(fm, cs, by=c("country","date")) %>%
   rowwise()
 
-names(cs)[names(cs) == "date"] <- "daybefore"
+names(cs)[names(cs) == "date"] <- "one"
 names(cs)[names(cs) == "case"] <- "case-1"
 
 dat <- 
-  left_join(dat, cs, by=c("country","daybefore")) %>%
+  left_join(dat, cs, by=c("country","one")) %>%
+  rowwise()
+
+names(cs)[names(cs) == "one"] <- "two"
+names(cs)[names(cs) == "case-1"] <- "case-2"
+
+dat <- 
+  left_join(dat, cs, by=c("country","two")) %>%
+  rowwise()
+
+names(cs)[names(cs) == "two"] <- "three"
+names(cs)[names(cs) == "case-2"] <- "case-3"
+
+dat <- 
+  left_join(dat, cs, by=c("country","three")) %>%
+  rowwise()
+
+names(cs)[names(cs) == "three"] <- "four"
+names(cs)[names(cs) == "case-3"] <- "case-4"
+
+dat <- 
+  left_join(dat, cs, by=c("country","four")) %>%
+  rowwise()
+
+names(cs)[names(cs) == "four"] <- "five"
+names(cs)[names(cs) == "case-4"] <- "case-5"
+
+dat <- 
+  left_join(dat, cs, by=c("country","five")) %>%
   rowwise()
 
 ## reordering columns
-order <- c("country", "measure", "daybefore", "date", "case-1", "case")
+order <- c("country", "measure", "five", "four", "three","two", "one",
+           "date", "case-5", "case-4", "case-3", "case-2","case-1", "case")
 dat <- dat[, order]
 
 ## slope function
@@ -80,7 +116,23 @@ slope  <-  function(x){
       return(coef(lm(I(1:2)~x))[2])
   }
 
-dat$slope <- apply(dat[,c("case-1","case")], 1, slope)
+
+install.packages("pbapply")
+library(pbapply)
+
+## reduce dimension
+dat <- unique(dat)
+
+
+dat$slope7 <- pbapply(dat[,c("case-1","case")], 1, slope)
+dat$slope6 <- pbapply(dat[,c("case-2","case-1")], 1, slope)
+dat$slope5 <- pbapply(dat[,c("case-3","case-2")], 1, slope)
+dat$slope4 <- pbapply(dat[,c("case-4","case-3")], 1, slope)
+dat$slope3 <- pbapply(dat[,c("case-5","case-4")], 1, slope)
+
+
+dat$slope <- rowMeans(dat[,c("slope3", "slope4", "slope5", 
+                        "slope6", "slope7")], na.rm = TRUE)
 
 root <- subset(dat, select = c("country", "measure", "slope"))
 root <- root %>% drop_na()
@@ -116,8 +168,6 @@ root$measure <- sapply (root$measure, function(x) if(x == "Health screenings in 
 })
 
 
-## root$slope <- as.numeric(format(round(root$slope, 5), nsmall = 5))
-
 df <- subset(root, select = c("measure", "slope"))
 
 df <- as.data.frame(df)
@@ -137,3 +187,9 @@ plot <- fviz_cluster(res, df, geom = "text", repel = TRUE, ellipse = TRUE,
                      ggtheme = theme_linedraw())
 
 plot
+
+clusters <- as.data.frame(res$cluster)
+clusters
+
+write.csv(clusters,"~/Programming/00_github/covid-data-ODI-submission/clusters.csv")
+
