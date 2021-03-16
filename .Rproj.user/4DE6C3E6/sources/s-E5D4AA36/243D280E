@@ -1,0 +1,32 @@
+{
+    "id": "243D280E",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1615739797720.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "expression": "m.tsa",
+        "caption": "m.tsa",
+        "totalObservations": 22998,
+        "displayedObservations": 22998,
+        "variables": 3,
+        "cacheKey": "1B13766C",
+        "object": "m.tsa",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=m.tsa&cache_key=1B13766C&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7814402261997941870,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615739797720,
+    "read_only": false,
+    "read_only_alternatives": []
+}
