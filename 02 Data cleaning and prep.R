@@ -15,14 +15,17 @@ if(!require(tidyverse)){
   measures$date_implemented[18995]<-"2020-08-13" #correct wrong date
   measures$entry_date<- as.Date(measures$entry_date,"%Y-%m-%d")
   str(measures)
+  
+  ###Remove regions column
+  measures<- subset(measures, select = -c(region) )
 
   ###Change lists to characters
   measures$category<- as.character(measures$category)
-  measures$region<- as.character(measures$region)
   measures$country<- as.character(measures$country)
   str(measures)
   
   ###add regions data
+  measures$region<-with(countries, REGION[match(measures$iso, ISO3)]) #add subregion column
   measures$subregion<-with(countries, subregion[match(measures$iso, ISO3)]) #add subregion column
   measures$regionalbodies<-with(countries, regionalbodies[match(measures$iso, ISO3)]) #add regionalbodies column
   measures<-measures[,c(1:9,18:19,10:17)] #reorder columns
@@ -50,3 +53,4 @@ if(!require(tidyverse)){
   
 #Clean the environment
 rm(list=setdiff(ls(), c("measures","cases","deaths")))
+

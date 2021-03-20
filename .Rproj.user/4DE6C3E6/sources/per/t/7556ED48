@@ -1,0 +1,24 @@
+{
+    "id": "7556ED48",
+    "path": "~/GitHub/covid-data-ODI-submittion/01 Import data.R",
+    "project_path": "01 Import data.R",
+    "type": "r_source",
+    "hash": "3037988208",
+    "contents": "",
+    "dirty": false,
+    "created": 1616235523360.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "70,0",
+        "scrollLine": "55"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1616236500,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1616236500888,
+    "read_only": false,
+    "read_only_alternatives": []
+}
