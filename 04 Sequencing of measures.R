@@ -43,4 +43,4 @@ m$measure2<-as.factor(m$measure)
 m.tse<-m[,c(9,10,11)]
 m.tse<-m.tse[order(m.tse$country2),]
 mseq<-seqecreate(data=m.tse,id=m.tse$country2,timestamp=m.tse$date2,event=m.tse$measure2)
-msubseq <- seqefsub(mseq, min.support = 100)
+msubseq <- seqefsub(mseq, min.support=10)

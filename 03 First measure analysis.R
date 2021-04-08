@@ -476,3 +476,4 @@ if(!require(lubridate)){
 #Clean the environment
  rm(list=setdiff(ls(), c("measures","cases","deaths")))
  
+ 
