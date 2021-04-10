@@ -1,0 +1,32 @@
+{
+    "id": "7C915E8F",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1618046189762.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "firstmeasure_regionalbodies",
+        "caption": "firstmeasure_regionalbodies",
+        "totalObservations": 201,
+        "displayedObservations": 201,
+        "variables": 23,
+        "cacheKey": "3663A232",
+        "object": "firstmeasure_regionalbodies",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=firstmeasure_regionalbodies&cache_key=3663A232&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1618046014,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1618046189762,
+    "read_only": false,
+    "read_only_alternatives": []
+}

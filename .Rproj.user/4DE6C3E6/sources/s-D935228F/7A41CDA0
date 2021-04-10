@@ -12,14 +12,14 @@
     "properties": {
         "expression": "firstmeasure",
         "caption": "firstmeasure",
-        "totalObservations": 193,
-        "displayedObservations": 193,
-        "variables": 23,
-        "cacheKey": "B3E33CF9",
+        "totalObservations": "193",
+        "displayedObservations": "193",
+        "variables": "23",
+        "cacheKey": "47866086",
         "object": "firstmeasure",
         "environment": "",
-        "contentUrl": "grid_resource/gridviewer.html?env=&obj=firstmeasure&cache_key=B3E33CF9&max_cols=50",
-        "preview": 0
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=firstmeasure&cache_key=47866086&max_cols=50",
+        "preview": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 8296228785919887916,

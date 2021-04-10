@@ -17,17 +17,21 @@ if(!require(lubridate)){
   install.packages("lubridate")
   library(lubridate)
 }
-if(!require(cowplot)){
-  install.packages("cowplot")
-  library(cowplot)
+if(!require(gridExtra )){
+  install.packages("gridExtra ")
+  library(gridExtra )
 }
 if(!require(scales)){
   install.packages("scales")
   library(scales)
 }
-if(!require(patchwork)){
-  install.packages("patchwork")
-  library(patchwork)
+if(!require(grid)){
+  install.packages("grid")
+  library(grid)
+}
+if(!require(ggpubr)){
+  install.packages("ggpubr")
+  library(ggpubr)
 }
 
 ##Task 1: Timeline of when the first measure was adopted (global)
@@ -80,6 +84,49 @@ if(!require(patchwork)){
     geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
     ggsave(filename="First measure timeline_greyscale.png",width=30)
   
+  #stacked regional timelines
+  timeline_plot<-ggplot(firstmeasure,aes(x=date_implemented,y=0, label=country))
+  timeline_plot+labs(col="Countries")+
+    theme_bw()+
+    geom_dotplot(aes(y=0),dotsize=0.2, alpha=0.5 )+
+    theme(axis.line.y=,
+          axis.text.y=element_blank(),
+          axis.title.x=,
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =,
+          axis.ticks.x =,
+          axis.line.x =,
+          strip.text.x =element_text(size = 20)
+    )+ 
+    facet_grid(region ~ .,scales="fixed")
+   ggsave(filename="First measure regional timelines_greyscale.png",width=20)
+  
+    #stacked regional timelines
+    timeline_plot<-ggplot(firstmeasure,aes(x=date_implemented,y=0, col=region, label=country))
+    timeline_plot+labs(col="Countries")+
+      scale_color_manual(values=region_colors, labels=region_range, drop = FALSE)+
+      theme_classic()+
+      geom_hline(yintercept=0,color = "black", size=0.3)+ # Plot horizontal black line for timeline
+      geom_segment(data=firstmeasure[firstmeasure$date_count == 1,], aes(y=positions,yend=0,xend=date_implemented), color='black', size=0.2)+ # Plot vertical segment lines for countries
+      geom_point(aes(y=0), size=3)+ # Plot scatter points at zero and date
+      theme(axis.line.y=element_blank(),
+            axis.text.y=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),
+            axis.ticks.y=element_blank(),
+            axis.text.x =element_blank(),
+            axis.ticks.x =element_blank(),
+            axis.line.x =element_blank(),
+            legend.position = "bottom"
+      )+ # Don't show axes, appropriately position legend
+      geom_text(data=month_df, aes(x=month_date_range,y=-0.5,label=month_format),size=2,vjust=1.5, color='black', angle=0)+ # Show text for each month
+      geom_text(data=day_df, aes(x=day_date_range,y=-0.2,label=day_format),size=2,vjust=1.5, color='black', angle=0,label.padding=1)+ # Show text for each day
+      geom_text(aes(y=text_position,label=country),size=2.5)+# Show text for each milestone
+      facet_grid(regionalbodies ~ .)
+    ggsave(filename="First measure regional bodies timelines_greyscale.png",width=30)
+    
+    
   ### Save the dataset in excel
   write.xlsx(firstmeasure,"~/GitHub/covid-data-ODI-submittion/firstmeasurebycountry.xlsx")
   
@@ -265,17 +312,39 @@ if(!require(patchwork)){
     geom_text(aes(y=text_position,label=country),size=2.5)+ # Show text for each milestone
     ggsave(filename="First measure pacific timeline_greyscale.png",width=25)
 
-  figure<-p1/p2/p3/p4/p5/p6 + plot_layout(ncol = 1)+ plot_annotation(
-    title = "Regional timelines of adoption of first COVID-19 measure")
-  ggarrange()
-  figure<-plot_grid(p1,p2,p3,p4,p5,p6,labels = c("Africa","Asia","Europe","Americas","Middle east","Pacific"),label_size = 10,ncol = 1, nrow = 6)
+  png(filename = "./timelines_noalign.png", width = 550, height = 750, units = 'px', res = 100)
+  print(
+    grid.arrange(p1, p2, p3, p4, p5, p6, ncol = 1,
+                 main=textGrob("Regional timelines of adoption of first COVID-19 measure", gp=gpar(fontsize=14, lineheight=18)) )
+  )
   
-  figure<-align_plots(p1,p2,p3,p4,p5,p6,align="v")
+  png(filename = "./timelines_noalign.png", width = 550, height = 750, units = 'px', res = 100)
+  print(grid.arrange(p1, p2, p3, p4, p5, p6, ncol = 1))
   
 ##Task 3: Timeline per regional political body
   
   ###First_measures for regional bodies
   firstmeasure_regionalbodies<-separate_rows(firstmeasure,regionalbodies,sep = ", ")
+  firstmeasure_regionalbodies<-firstmeasure_regionalbodies[!is.na(firstmeasure_regionalbodies$regionalbodies), ]
+  
+  #stacked regional bodies timelines
+  timeline_plot<-ggplot(firstmeasure_regionalbodies,aes(x=date_implemented,y=0, label=country))
+  timeline_plot+labs(col="Countries")+
+    theme_bw()+
+    geom_dotplot(aes(y=0),dotsize=0.2, alpha=0.5 )+
+    theme(axis.line.y=,
+          axis.text.y=element_blank(),
+          axis.title.x=,
+          axis.title.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.text.x =,
+          axis.ticks.x =,
+          axis.line.x =,
+          strip.text.x =element_text(size = 20)
+    )+ 
+    facet_grid(regionalbodies ~ .,scales="fixed",labeller = labeller(regionalbodies = label_wrap_gen(width = 10)))
+  ggsave(filename="First measure regional bodies timelines_greyscale.png",width=20)
+  
     
   ###African Union
   fmafricanunion<-subset(firstmeasure_regionalbodies, regionalbodies=="African Union") #subset african Union
