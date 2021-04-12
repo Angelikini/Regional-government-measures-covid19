@@ -18,7 +18,7 @@ if(!require(xlsx)){
 # Task 1: Download the ACAPS dataset
 
   ## Post credentials to get an authentication token
-  credentials <- list(username="an@acaps.org", password="Beukstraat149")
+  credentials <- list(username="XXX", password="XXX")
   auth_token_response <- httr::POST("https://api.acaps.org/api/v1/token-auth/", body=credentials)
   auth_token <- httr::content(auth_token_response)$token
 
@@ -67,5 +67,5 @@ if(!require(xlsx)){
   countries<-read.csv("~/GitHub/covid-data-ODI-submittion/Lists.csv",header = TRUE,sep=",")
   
   # Clean the environment
-  rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3","countries")))
+rm(list=setdiff(ls(), c("measures","cases","deaths","ISO3","countries")))
   

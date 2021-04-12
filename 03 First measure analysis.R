@@ -25,7 +25,7 @@ if(!require(lubridate)){
   firstmeasure<-firstmeasure[!is.na(firstmeasure$date_implemented), ]  #I decided to remove the rows with NA in the date_implemented. Alternatively I could have used the date of entry as a proxy.
 
   ###Assign colours to regions
-  region_range <- c("Asia", "Europe", "Americas", "Africa","Middle east","Pacific")
+  region_range <- c("Asia", "Europe", "Americas", "Africa","Middle East","Pacific")
   region_colors <- c("#d11141", "#00b159","#00aedb","#f37735","#ffc425", "#000000")
   firstmeasure$region <- factor(firstmeasure$region, levels=region_range, ordered=TRUE)
   
@@ -198,7 +198,7 @@ if(!require(lubridate)){
     ggsave(filename="First measure americas timeline.png",width=25)
   
   ###Middle east
-  fmmiddleeast<-subset(firstmeasure, region=="Middle east") #subset africa
+  fmmiddleeast<-subset(firstmeasure, region=="Middle East") #subset africa
   middle_east_range <- c("Western Asia","Southern Asia","Southeastern Asia") #assign colours to subregion
   middle_east_colors <- c("#e5b021","#cc9c1d","#b28919")
   fmmiddleeast$subregion <- factor(fmmiddleeast$subregion, levels=middle_east_range, ordered=TRUE)
@@ -475,3 +475,5 @@ if(!require(lubridate)){
  
 #Clean the environment
  rm(list=setdiff(ls(), c("measures","cases","deaths")))
+ 
+ 
