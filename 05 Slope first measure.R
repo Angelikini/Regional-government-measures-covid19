@@ -198,10 +198,10 @@ df <- scale(df)
 
 set.seed(123)
 
-res <- kmeans(df, 5)
+res <- kmeans(df, 6)
 
-# tiff("clusters.tiff", width=2800, height=2000, res = 600)
-# png("clusters.png", width=1400, height= 1000, res = 300)
+tiff("clusters.tiff", width=2800, height=2000, res = 600)
+#png("clusters.png", width=1400, height= 1000, res = 300)
 
 fviz_cluster(res, df, geom = "point",
              repel = TRUE,
@@ -217,7 +217,7 @@ fviz_cluster(res, df, geom = "point",
              xlab = NULL,
              ylab = NULL)
 
-## dev.off()
+dev.off()
 
 ## cross checking clustering with dataset values
 clusters <- as.data.frame(res$cluster)
@@ -229,6 +229,9 @@ clusters$category <- root$category
 
 clusters
 
+#clust <- apply(clusters, 2, as.character)
+#write.csv(clust, file = "data.csv")
+
 test <- clusters %>%
   group_by(label)
 
@@ -237,6 +240,8 @@ asia <- test[test$label == "Asia",]
 middle_east <- test[test$label == "Middle east",]
 africa <- test[test$label == "Africa",]
 americas <- test[test$label == "Americas",]
+pacific <- test[test$label == "Pacific",]
+
 
 ## Gini coefficient for continent "homogeneity"
 eu <- Gini(europe$cluster)
@@ -244,9 +249,11 @@ as <- Gini(asia$cluster)
 me <- Gini(middle_east$cluster)
 afr <- Gini(africa$cluster)
 am <- Gini(americas$cluster)
+pc <- Gini(pacific$cluster)
 
-continents <- c("eu", "asia", "me", "africa", "americas")
-value <- c(eu, as, me, afr, am)
+
+continents <- c("eu", "asia", "me", "africa", "americas", "pacific")
+value <- c(eu, as, me, afr, am, pc)
 
 results <- data.frame(continents, value)
 
