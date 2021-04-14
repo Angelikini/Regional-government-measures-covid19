@@ -455,12 +455,12 @@ if(!require(lubridate)){
  ###Merge first measure and first case tables
  firsts<- merge(firstmeasure, firstcase, by.x = "iso", by.y= "iso") #merge datasets
  firsts<-firsts[,c(2,11,1,10,4,9,12,22,24)] #keep only necessary columns
- names(firsts)[2]<-"country" #rename column
+ names(firsts)[4]<-"country" #rename column
  names(firsts)[5]<-"date_measure_implemented" #rename column
  names(firsts)[6]<-"measure_category" #rename column
  names(firsts)[8]<-"first_case_date" #rename column
  names(firsts)[9]<-"first_case_province" #rename column
- fmc<-firsts[,c(2,5,8)] #subset dates only
+ fmc<-firsts[,c(4,5,8)] #subset dates only
  fmc$difference<-(fmc$date_measure_implemented - fmc$first_case_date) #calculate the difference between date of first case and date of first measure
  
  ###plot histogram
